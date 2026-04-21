@@ -45,7 +45,8 @@ if prompt := st.chat_input("Ask about your engine, oil, or brakes..."):
     with st.chat_message("assistant"):
         st.markdown(ai_response)
     
-    st.session_state.messages.append({"role": "assistant", "content": ai_response})        ai_response = "I'm having a bit of engine trouble connecting to my brain. Try again!"
+    st.session_state.messages.append({"role": "assistant", "content": ai_response})      
+    ai_response = "I'm having a bit of engine trouble connecting to my brain. Try again!"
 
     # Display Assistant Response
     with st.chat_message("assistant"):
