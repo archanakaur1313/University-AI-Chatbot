@@ -9,7 +9,7 @@ st.markdown("""
     <style>
     .stApp { background-color: #0e1117; color: white; }
     </style>
-    """, unsafe_allow_status=True)
+ """, unsafe_allow_html=True)
 
 st.title("🔧 AutoMechanic AI")
 st.caption("University Gen AI Project | Interactive Mechanic Assistant")
