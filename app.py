@@ -1,40 +1,41 @@
 import streamlit as st
-from datetime import datetime
-import antigravity
+from chat import get_ai_response # This connects the two files!
 
-# 1. Page Config (Dark Mode / Title)
+# 1. Page Config
 st.set_page_config(page_title="AutoMechanic AI", layout="centered")
 
-# 2. Time Training Logic
-now = datetime.now()
-current_time = now.strftime("%H:%M")
-current_date = now.strftime("%B %d, %Y")
+# 2. Styling (Matching your Dark Aesthetic)
+st.markdown("""
+    <style>
+    .stApp { background-color: #0e1117; color: white; }
+    </style>
+    """, unsafe_allow_status=True)
 
-# 3. Sidebar / Header
 st.title("🔧 AutoMechanic AI")
-st.caption(f"Currently in the Garage | {current_date} {current_time}")
+st.caption("University Gen AI Project | Interactive Mechanic Assistant")
 
-# 4. Initialize Chat Memory
+# 3. Initialize Chat Memory
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 5. Display Chat History
+# 4. Display Chat History
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 6. Chat Input Logic
+# 5. Chat Input Logic
 if prompt := st.chat_input("Ask about your engine, oil, or brakes..."):
     # Display user message
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # "Training" the AI with Time Context
-    system_instruction = f"You are a helpful AutoMechanic AI. The time is {current_time}. Be energetic if it's day, and remind users the physical shop is closed if it's after 6 PM."
+    # Get response from our 'chat.py' brain
+    ai_response = get_ai_response(prompt)
 
-    # Generate Response via Antigravity
-    # (Using a placeholder logic for the demo, replace with your specific Antigravity call)
-    try:
+    # Display Assistant Response
+    with st.chat_message("assistant"):
+        st.markdown(ai_response)
+    st.session_state.messages.append({"role": "assistant", "content": ai_response})    try:
         response = f"I see you're asking about '{prompt}'. Since it's {current_time}, I'd recommend checking your oil levels before the sun goes down!"
         # In your real code, you'd use: response = antigravity.query(prompt, context=system_instruction)
     except:
