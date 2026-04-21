@@ -1,30 +1,46 @@
-from flask import Flask, request, jsonify, send_from_directory
-from chatbot import get_ai_response
+import streamlit as st
+from datetime import datetime
+import antigravity
 
-app = Flask(__name__, static_folder='.', static_url_path='')
+# 1. Page Config (Dark Mode / Title)
+st.set_page_config(page_title="AutoMechanic AI", layout="centered")
 
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
+# 2. Time Training Logic
+now = datetime.now()
+current_time = now.strftime("%H:%M")
+current_date = now.strftime("%B %d, %Y")
 
-@app.route('/api/chat', methods=['POST'])
-def chat():
-    data = request.get_json()
-    user_query = data.get('message', '')
-    
-    if not user_query:
-        return jsonify({"response": "I didn't catch that."})
+# 3. Sidebar / Header
+st.title("🔧 AutoMechanic AI")
+st.caption(f"Currently in the Garage | {current_date} {current_time}")
 
+# 4. Initialize Chat Memory
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 5. Display Chat History
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# 6. Chat Input Logic
+if prompt := st.chat_input("Ask about your engine, oil, or brakes..."):
+    # Display user message
+    st.chat_message("user").markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    # "Training" the AI with Time Context
+    system_instruction = f"You are a helpful AutoMechanic AI. The time is {current_time}. Be energetic if it's day, and remind users the physical shop is closed if it's after 6 PM."
+
+    # Generate Response via Antigravity
+    # (Using a placeholder logic for the demo, replace with your specific Antigravity call)
     try:
-        # Call the logic from your chatbot.py snippet
-        response = get_ai_response(user_query)
-    except Exception as e:
-        # Since 'antigravity.geospatial_query' is a mock method, this will catch the 
-        # missing attribute error and return a fallback message so the UI still works!
-        response = f"Simulated AI Response to: '{user_query}' \n(Note: antigravity engine not found - {str(e)})"
-        
-    return jsonify({"response": response})
+        response = f"I see you're asking about '{prompt}'. Since it's {current_time}, I'd recommend checking your oil levels before the sun goes down!"
+        # In your real code, you'd use: response = antigravity.query(prompt, context=system_instruction)
+    except:
+        response = "I'm having a bit of engine trouble connecting to my brain. Try again in a second!"
 
-if __name__ == '__main__':
-    # Run the server on http://127.0.0.1:5000
-    app.run(debug=True, port=5000)
+    # Display Assistant Response
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    st.session_state.messages.append({"role": "assistant", "content": response})
