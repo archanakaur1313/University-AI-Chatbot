@@ -30,18 +30,13 @@ if prompt := st.chat_input("Ask about your engine, oil, or brakes..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     # Get response from our 'chat.py' brain
-    ai_response = get_ai_response(prompt)
+    try:
+        ai_response = get_ai_response(prompt)
+    except Exception as e:
+        ai_response = "I'm having a bit of engine trouble connecting to my brain. Try again!"
 
     # Display Assistant Response
     with st.chat_message("assistant"):
         st.markdown(ai_response)
-    st.session_state.messages.append({"role": "assistant", "content": ai_response})    try:
-        response = f"I see you're asking about '{prompt}'. Since it's {current_time}, I'd recommend checking your oil levels before the sun goes down!"
-        # In your real code, you'd use: response = antigravity.query(prompt, context=system_instruction)
-    except:
-        response = "I'm having a bit of engine trouble connecting to my brain. Try again in a second!"
-
-    # Display Assistant Response
-    with st.chat_message("assistant"):
-        st.markdown(response)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    
+    st.session_state.messages.append({"role": "assistant", "content": ai_response})
