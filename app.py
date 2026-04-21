@@ -1,5 +1,6 @@
+
 import streamlit as st
-from chat import get_ai_response # This connects the two files!
+from chatbot import get_ai_response  # Changed 'chat' to 'chatbot' to match your file name!
 
 # 1. Page Config
 st.set_page_config(page_title="AutoMechanic AI", layout="centered")
