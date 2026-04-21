@@ -33,8 +33,14 @@ if prompt := st.chat_input("Ask about your engine, oil, or brakes..."):
     try:
         ai_response = get_ai_response(prompt)
     except Exception as e:
-        ai_response = "I'm having a bit of engine trouble connecting to my brain. Try again!"
+        ai_response = "I'm having a bit of engine trouble. Try again!"
 
+    # Display Assistant Response
+    with st.chat_message("assistant"):
+        st.markdown(ai_response)
+    
+    # Save to memory
+    st.session_state.messages.append({"role": "assistant", "content": ai_response})
     # Display Assistant Response
     with st.chat_message("assistant"):
         st.markdown(ai_response)
